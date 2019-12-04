@@ -3,14 +3,14 @@
 set -e
 
 sudo ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
-sudo echo "America/New_York" > /etc/timezone
+echo "America/New_York" | sudo tee -a /etc/timezone
 echo "------------------- updating time zone complete -------------------"
 
 sudo yum update -y
+sudo amazon-linux-extras install -y epel
 
-sudo yum install -y 
+sudo yum install -y \
 openssl-devel \
-epel-release \
 libmcrypt-devel \
 ca-certificates \
 git \
@@ -30,20 +30,20 @@ chromium-browser \
 libstdc++
 echo "------------------- looker yum dependencies complete -------------------"
 
-alias chromium='chromium-browser'
-sudo ln -s /usr/bin/chromium-browser /usr/bin/chromium
+alias chromium='chromium'
+sudo ln -s /usr/bin/google-chrome-stable /usr/bin/chromium
 echo "------------------- chromium items complete -------------------"
 
 sudo amazon-linux-extras enable corretto8
-sudo yum install java-1.8.0-amazon-corretto-devel
+sudo yum install -y java-1.8.0-amazon-corretto-devel
 echo "------------------- looker java dependency complete -------------------"
 
 wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 -O /home/ec2-user/phantomjs-1.9.8-linux-x86_64.tar.bz2
 sudo mkdir -p /opt/phantomjs
 bzip2 -d /home/ec2-user/phantomjs-1.9.8-linux-x86_64.tar.bz2
-sudo tar -xvf phantomjs-1.9.8-linux-x86_64.tar --directory /opt/phantomjs/ --strip-components 1
+sudo tar -xvf /home/ec2-user/phantomjs-1.9.8-linux-x86_64.tar --directory /opt/phantomjs/ --strip-components 1
 sudo ln -s /opt/phantomjs/bin/phantomjs /usr/bin/phantomjs
-rm /home/ec2-user/phantomjs-1.9.8-linux-x86_64.tar.bz2
+rm /home/ec2-user/phantomjs-1.9.8-linux-x86_64.tar
 echo "------------------- phantomjs dependency complete -------------------"
 
 sudo cp /etc/sysctl.conf /etc/sysctl.conf.dist
@@ -91,12 +91,12 @@ rm /home/ec2-user/looker.conf
 rm /home/ec2-user/looker.service
 echo "------------------- copy systemd components complete -------------------"
 
+sudo adduser looker
+echo "------------------- add looker user and group complete -------------------"
+
 sudo mkdir /run/looker
 sudo chown looker:looker /run/looker
 echo "------------------- modified pid directory complete -------------------"
-
-sudo adduser looker
-echo "------------------- add looker user and group complete -------------------"
 
 echo "limit      maxfiles 8192 8192"     | sudo tee -a /etc/security/limits.conf
 echo "looker     soft     nofile     8192" | sudo tee -a /etc/security/limits.conf
@@ -106,11 +106,11 @@ echo "------------------- updated launchd complete -------------------"
 echo '%looker ALL=(ALL) NOPASSWD:ALL' | sudo tee -a /etc/sudoers
 echo "------------------- adding looker to sudoers complete -------------------"
 
-mkdir /home/looker/looker
-chown looker:looker /home/looker/looker
+sudo mkdir /home/looker/looker
+sudo chown looker:looker /home/looker/looker
 
-mkdir /srv/data
-chown -R looker:looker /srv/data
+sudo mkdir /srv/data
+sudo chown -R looker:looker /srv/data
 echo "------------------- created looker directory -------------------"
 
 sudo su - looker

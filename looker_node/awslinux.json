@@ -94,5 +94,5 @@
             "execute_command": "{{.Vars}} bash '{{.Path}}'",
             "script": "provision_awslinux.sh"
         }
-    ],
+    ]
 }
