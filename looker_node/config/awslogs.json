@@ -1,0 +1,17 @@
+{
+	"logs": {
+		"logs_collected": {
+			"files": {
+				"collect_list": [
+					{
+						"file_path": "/home/looker/looker/logs/looker.log",
+						"log_group_name": "/looker/looker.logs",
+						"log_stream_name": "{instance_id}",
+                        "timezone": "Local",
+                        "timestamp_format": "%b %d %H:%M:%S"
+					}
+				]
+			}
+		}
+	}
+}

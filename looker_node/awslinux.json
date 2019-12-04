@@ -1,0 +1,98 @@
+{
+    "variables": {
+        "access_key": "",
+        "secret_key": "",
+        "vpcid_to_build_in": "",
+        "subnetid_to_build_in": "",
+        "tag_application": "",
+        "tag_contact_email": "",
+        "tag_customer": "",
+        "tag_team": "",
+        "tag_environment": "",
+        "looker_license_key": "",
+        "looker_license_email": "",
+        "looker_version": ""
+    },
+    "builders": [{
+        "type": "amazon-ebs",
+        "access_key": "{{user `access_key`}}",
+        "secret_key": "{{user `secret_key`}}",
+        "region": "us-east-1",
+        "source_ami": "ami-0b69ea66ff7391e80",
+        "instance_type": "t2.medium",
+        "ssh_username": "ec2-user",
+        "ami_name": "looker_node {{timestamp}}",
+        "vpc_id": "{{user `vpcid_to_build_in`}}",
+        "subnet_id": "{{user `subnetid_to_build_in`}}",
+        "run_tags": {
+            "Name": "looker packer ami builder for looker_node",
+            "application": "{{user `tag_application`}}",
+            "contact-email": "{{user `tag_contact_email`}}",
+            "customer": "{{user `tag_customer`}}",
+            "team": "{{user `tag_team`}}",
+            "environment": "{{user `tag_environment`}}",
+            "ami": "aws linux ami"            
+        },
+        "tags": {
+            "Name": "Looker Node AWS Linux",
+            "application": "{{user `tag_application`}}",
+            "contact-email": "{{user `tag_contact_email`}}",
+            "customer": "{{user `tag_customer`}}",
+            "team": "{{user `tag_team`}}",
+            "environment": "{{user `tag_environment`}}",
+            "looker-version": "6.24.20",
+            "ami": "aws linux ami"            
+        }
+    }],
+    "provisioners": [{
+            "type": "file",
+            "source": "./config/looker.conf",
+            "destination": "/home/ec2-user/looker.conf"
+        },
+        {
+            "type": "file",
+            "source": "./config/looker.sysconfig",
+            "destination": "/home/ec2-user/looker.sysconfig"
+        },
+        {
+            "type": "file",
+            "source": "./config/logrotate.conf",
+            "destination": "/home/ec2-user/logrotate.conf"
+        },
+        {
+            "type": "file",
+            "source": "./config/logrotate-sched.conf",
+            "destination": "/home/ec2-user/logrotate-sched.conf"
+        },
+        {
+            "type": "file",
+            "source": "./config/awslogs.json",
+            "destination": "/home/ec2-user/awslogs.json"
+        },
+        {
+            "type": "file",
+            "source": "./cron/crontab.looker",
+            "destination": "/home/ec2-user/crontab.looker"
+        },
+        {
+            "type": "file",
+            "source": "./cron/crontab.system",
+            "destination": "/home/ec2-user/crontab.system"
+        },
+        {
+            "type": "file",
+            "source": "./systemd/looker.service",
+            "destination": "/home/ec2-user/looker.service"
+        },
+        {
+            "type": "shell",
+            "environment_vars": [
+                "LOOKER_LICENSE_KEY={{ user `looker_license_key` }}",
+                "LOOKER_LICENSE_EMAIL={{ user `looker_license_email` }}",
+                "LOOKER_VERSION={{ user `looker_version` }}"
+            ],
+            "execute_command": "{{.Vars}} bash '{{.Path}}'",
+            "script": "provision_awslinux.sh"
+        }
+    ],
+}
