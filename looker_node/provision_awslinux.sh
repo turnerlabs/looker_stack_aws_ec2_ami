@@ -30,6 +30,7 @@ chromium-browser \
 libstdc++
 echo "------------------- looker yum dependencies complete -------------------"
 
+curl https://intoli.com/install-google-chrome.sh | bash
 alias chromium='chromium'
 sudo ln -s /usr/bin/google-chrome-stable /usr/bin/chromium
 echo "------------------- chromium items complete -------------------"
@@ -76,6 +77,9 @@ sudo systemctl enable al-agent
 rm /home/ec2-user/al-agent_LATEST_amd64.rpm
 echo "------------------- enable autostart of threat manager and remove deb-------------------"
 
+sudo adduser looker
+echo "------------------- add looker user and group complete -------------------"
+
 sudo crontab /home/ec2-user/crontab.system
 sudo crontab -u looker /home/ec2-user/crontab.looker
 echo "------------------- enable logs cleanup complete -------------------"
@@ -84,15 +88,12 @@ sudo cp /home/ec2-user/looker.sysconfig /etc/profile.d/looker.sh
 sudo cp /home/ec2-user/looker.conf /usr/lib/tmpfiles.d
 
 sudo cp /home/ec2-user/looker.service /etc/systemd/system/looker.service
-chmod 664 /etc/systemd/system/looker.service
+sudo chmod 664 /etc/systemd/system/looker.service
 
 rm /home/ec2-user/looker.sysconfig
 rm /home/ec2-user/looker.conf
 rm /home/ec2-user/looker.service
 echo "------------------- copy systemd components complete -------------------"
-
-sudo adduser looker
-echo "------------------- add looker user and group complete -------------------"
 
 sudo mkdir /run/looker
 sudo chown looker:looker /run/looker
@@ -106,16 +107,18 @@ echo "------------------- updated launchd complete -------------------"
 echo '%looker ALL=(ALL) NOPASSWD:ALL' | sudo tee -a /etc/sudoers
 echo "------------------- adding looker to sudoers complete -------------------"
 
-sudo mkdir /home/looker/looker
-sudo chown looker:looker /home/looker/looker
-
 sudo mkdir /srv/data
 sudo chown -R looker:looker /srv/data
 echo "------------------- created looker directory -------------------"
 
-sudo su - looker
+sudo su - looker <<HERE
+whoami
+ls -al /home/looker
+mkdir /home/looker/looker
 curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'${LOOKER_LICENSE_KEY}'", "email": "'${LOOKER_LICENSE_EMAIL}'", "latest": "specific", "specific": "looker-latest.jar"}' https://apidownload.looker.com/download | jq '.url' | xargs curl -o /home/looker/looker/looker.jar
 curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'${LOOKER_LICENSE_KEY}'", "email": "'${LOOKER_LICENSE_EMAIL}'", "latest": "specific", "specific": "looker-latest.jar"}' https://apidownload.looker.com/download | jq '.depUrl' | xargs curl -o /home/looker/looker/looker-dependencies.jar
+HERE
+
 echo "------------------- download looker jars complete -------------------"
 
 
