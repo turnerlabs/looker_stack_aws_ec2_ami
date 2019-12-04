@@ -15,19 +15,6 @@ The provisioner phase installs all the items iso needs.  If you take a look at t
 
 Once the provisioner has completed, an AMI will be created using the ami_name in the ubuntu.json or the awslinux.json file.
 
-Here's the command line needed to build the Ubuntu AMI.
-
-```bash
-packer build
--var 'tag_application=<>'
--var 'tag_contact_email=<>'
--var 'tag_customer=<>'
--var 'tag_team=<>'
--var 'tag_environment=<>'
--var 'vpcid_to_build_in=<>'
--var 'subnetid_to_build_in=<>'
-ubuntu.json
-```
 Here's the command line needed to build the Amazon Linux AMI.
 
 ```bash

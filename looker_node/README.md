@@ -10,7 +10,6 @@ The builder phase uses a t2 medium of the Ubuntu 16.04 or the Amazon Linux AMI i
 
 The provisioner phase installs all the Looker components.  If you take a look at the provision.sh script you can see all that's happening.
 
-
 ## Process
 
 Once the provisioner has completed, an AMI will be created using the ami_name in the awslnux.json file.
@@ -26,5 +25,8 @@ packer build
 -var 'tag_environment=<>'
 -var 'vpcid_to_build_in=<>'
 -var 'subnetid_to_build_in=<>'
+-var 'looker_license_key=<>'
+-var 'looker_license_email=<>'
+-var 'looker_version=<>'
 awslinux.json
 ```
