@@ -27,7 +27,9 @@ jq \
 mysql-devel \
 sudo \
 chromium-browser \
-libstdc++
+libstdc++ \
+nfs-utils \
+netcat
 echo "------------------- looker yum dependencies complete -------------------"
 
 curl https://intoli.com/install-google-chrome.sh | bash
@@ -112,11 +114,11 @@ sudo chown -R looker:looker /srv/data
 echo "------------------- created looker directory -------------------"
 
 sudo su - looker <<HERE
-whoami
-ls -al /home/looker
 mkdir /home/looker/looker
 curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'${LOOKER_LICENSE_KEY}'", "email": "'${LOOKER_LICENSE_EMAIL}'", "latest": "specific", "specific": "looker-latest.jar"}' https://apidownload.looker.com/download | jq '.url' | xargs curl -o /home/looker/looker/looker.jar
 curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'${LOOKER_LICENSE_KEY}'", "email": "'${LOOKER_LICENSE_EMAIL}'", "latest": "specific", "specific": "looker-latest.jar"}' https://apidownload.looker.com/download | jq '.depUrl' | xargs curl -o /home/looker/looker/looker-dependencies.jar
+curl -o /home/looker/looker/looker https://raw.githubusercontent.com/looker/customer-scripts/master/startup_scripts/looker
+chmod 0750 /home/looker/looker/looker
 HERE
 
 echo "------------------- download looker jars complete -------------------"
