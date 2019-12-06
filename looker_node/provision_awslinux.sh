@@ -86,16 +86,12 @@ sudo crontab /home/ec2-user/crontab.system
 sudo crontab -u looker /home/ec2-user/crontab.looker
 echo "------------------- enable logs cleanup complete -------------------"
 
-sudo cp /home/ec2-user/looker.sysconfig /etc/profile.d/looker.sh
-sudo cp /home/ec2-user/looker.conf /usr/lib/tmpfiles.d
+sudo mv /home/ec2-user/looker.sysconfig /etc/profile.d/looker.sh
+sudo mv /home/ec2-user/looker.conf /usr/lib/tmpfiles.d
 
-curl https://raw.githubusercontent.com/looker/customer-scripts/master/startup_scripts/systemd/looker.service -O
+curl -o /home/ec2-user/looker.service https://raw.githubusercontent.com/looker/customer-scripts/master/startup_scripts/systemd/looker.service 
 sudo mv /home/ec2-user/looker.service /etc/systemd/system/looker.service
 sudo chmod 664 /etc/systemd/system/looker.service
-
-rm /home/ec2-user/looker.sysconfig
-rm /home/ec2-user/looker.conf
-rm /home/ec2-user/looker.service
 echo "------------------- copy systemd components complete -------------------"
 
 sudo mkdir /run/looker
