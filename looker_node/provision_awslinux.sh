@@ -89,7 +89,8 @@ echo "------------------- enable logs cleanup complete -------------------"
 sudo cp /home/ec2-user/looker.sysconfig /etc/profile.d/looker.sh
 sudo cp /home/ec2-user/looker.conf /usr/lib/tmpfiles.d
 
-sudo cp /home/ec2-user/looker.service /etc/systemd/system/looker.service
+curl https://raw.githubusercontent.com/looker/customer-scripts/master/startup_scripts/systemd/looker.service -O
+sudo mv /home/ec2-user/looker.service /etc/systemd/system/looker.service
 sudo chmod 664 /etc/systemd/system/looker.service
 
 rm /home/ec2-user/looker.sysconfig
@@ -115,6 +116,7 @@ echo "------------------- created looker directory -------------------"
 
 sudo su - looker <<HERE
 mkdir /home/looker/looker
+mkdir /home/looker/looker/deploy_keys
 curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'${LOOKER_LICENSE_KEY}'", "email": "'${LOOKER_LICENSE_EMAIL}'", "latest": "specific", "specific": "looker-latest.jar"}' https://apidownload.looker.com/download | jq '.url' | xargs curl -o /home/looker/looker/looker.jar
 curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'${LOOKER_LICENSE_KEY}'", "email": "'${LOOKER_LICENSE_EMAIL}'", "latest": "specific", "specific": "looker-latest.jar"}' https://apidownload.looker.com/download | jq '.depUrl' | xargs curl -o /home/looker/looker/looker-dependencies.jar
 curl -o /home/looker/looker/looker https://raw.githubusercontent.com/looker/customer-scripts/master/startup_scripts/looker
@@ -122,6 +124,5 @@ chmod 0750 /home/looker/looker/looker
 HERE
 
 echo "------------------- download looker jars complete -------------------"
-
 
 java -version
