@@ -21,3 +21,4 @@
 #
 # m h  dom mon dow   command
 14 * * * * /usr/sbin/logrotate /home/looker/logrotate.conf --state /home/looker/logrotate-state
+*/5 * * * * /home/looker/looker/sm_update.sh

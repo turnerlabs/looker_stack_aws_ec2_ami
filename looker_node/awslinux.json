@@ -80,11 +80,6 @@
             "destination": "/home/ec2-user/crontab.system"
         },
         {
-            "type": "file",
-            "source": "./systemd/looker.service",
-            "destination": "/home/ec2-user/looker.service"
-        },
-        {
             "type": "shell",
             "environment_vars": [
                 "LOOKER_LICENSE_KEY={{ user `looker_license_key` }}",
