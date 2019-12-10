@@ -28,8 +28,9 @@ mysql-devel \
 sudo \
 chromium-browser \
 libstdc++ \
-nfs-utils \
-netcat
+netcat \
+mysql \
+amazon-efs-utils
 echo "------------------- looker yum dependencies complete -------------------"
 
 curl https://intoli.com/install-google-chrome.sh | bash
@@ -83,20 +84,15 @@ sudo adduser looker
 echo "------------------- add looker user and group complete -------------------"
 
 sudo crontab /home/ec2-user/crontab.system
-sudo crontab -u looker /home/ec2-user/crontab.looker
+sudo mv /home/ec2-user/crontab.looker /home/looker/crontab.looker
+sudo crontab -u looker /home/looker/crontab.looker
+sudo chown looker:looker /home/looker/crontab.looker
 echo "------------------- enable logs cleanup complete -------------------"
-
-sudo mv /home/ec2-user/looker.sysconfig /etc/profile.d/looker.sh
-sudo mv /home/ec2-user/looker.conf /usr/lib/tmpfiles.d
 
 curl -o /home/ec2-user/looker.service https://raw.githubusercontent.com/looker/customer-scripts/master/startup_scripts/systemd/looker.service 
 sudo mv /home/ec2-user/looker.service /etc/systemd/system/looker.service
 sudo chmod 664 /etc/systemd/system/looker.service
 echo "------------------- copy systemd components complete -------------------"
-
-sudo mkdir /run/looker
-sudo chown looker:looker /run/looker
-echo "------------------- modified pid directory complete -------------------"
 
 echo "limit      maxfiles 8192 8192"     | sudo tee -a /etc/security/limits.conf
 echo "looker     soft     nofile     8192" | sudo tee -a /etc/security/limits.conf
@@ -105,10 +101,6 @@ echo "------------------- updated launchd complete -------------------"
 
 echo '%looker ALL=(ALL) NOPASSWD:ALL' | sudo tee -a /etc/sudoers
 echo "------------------- adding looker to sudoers complete -------------------"
-
-sudo mkdir /srv/data
-sudo chown -R looker:looker /srv/data
-echo "------------------- created looker directory -------------------"
 
 sudo su - looker <<HERE
 mkdir /home/looker/looker

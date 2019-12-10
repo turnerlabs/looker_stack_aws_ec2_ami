@@ -44,25 +44,11 @@
             "ami": "aws linux ami"            
         }
     }],
-    "provisioners": [{
-            "type": "file",
-            "source": "./config/looker.conf",
-            "destination": "/home/ec2-user/looker.conf"
-        },
-        {
-            "type": "file",
-            "source": "./config/looker.sysconfig",
-            "destination": "/home/ec2-user/looker.sysconfig"
-        },
+    "provisioners": [
         {
             "type": "file",
             "source": "./config/logrotate.conf",
             "destination": "/home/ec2-user/logrotate.conf"
-        },
-        {
-            "type": "file",
-            "source": "./config/logrotate-sched.conf",
-            "destination": "/home/ec2-user/logrotate-sched.conf"
         },
         {
             "type": "file",

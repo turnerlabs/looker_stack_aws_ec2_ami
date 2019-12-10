@@ -22,4 +22,3 @@
 # m h  dom mon dow   command
 1 * * * *  /bin/systemctl restart amazon-cloudwatch-agent.service
 2 * * * *  /bin/systemctl restart amazon-ssm-agent.service
-3 * * * *  /bin/systemctl restart looker
