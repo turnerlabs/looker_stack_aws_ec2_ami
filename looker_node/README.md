@@ -28,5 +28,6 @@ packer build
 -var 'looker_license_key=<>'
 -var 'looker_license_email=<>'
 -var 'looker_version=<>'
+-var 'datadog_api_key=<>'
 awslinux.json
 ```

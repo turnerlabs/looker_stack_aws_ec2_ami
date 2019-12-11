@@ -11,7 +11,8 @@
         "tag_environment": "",
         "looker_license_key": "",
         "looker_license_email": "",
-        "looker_version": ""
+        "looker_version": "",
+        "datadog_api_key":""
     },
     "builders": [{
         "type": "amazon-ebs",
@@ -31,6 +32,7 @@
             "customer": "{{user `tag_customer`}}",
             "team": "{{user `tag_team`}}",
             "environment": "{{user `tag_environment`}}",
+            "looker-version": "{{user `looker_version`}}",
             "ami": "aws linux ami"            
         },
         "tags": {
@@ -40,7 +42,7 @@
             "customer": "{{user `tag_customer`}}",
             "team": "{{user `tag_team`}}",
             "environment": "{{user `tag_environment`}}",
-            "looker-version": "6.24.20",
+            "looker-version": "{{user `looker_version`}}",
             "ami": "aws linux ami"            
         }
     }],
@@ -66,11 +68,17 @@
             "destination": "/home/ec2-user/crontab.system"
         },
         {
+            "type": "file",
+            "source": "./yum/datadog.repo",
+            "destination": "/home/ec2-user/datadog.repo"
+        },
+        {
             "type": "shell",
             "environment_vars": [
                 "LOOKER_LICENSE_KEY={{ user `looker_license_key` }}",
                 "LOOKER_LICENSE_EMAIL={{ user `looker_license_email` }}",
-                "LOOKER_VERSION={{ user `looker_version` }}"
+                "LOOKER_VERSION={{ user `looker_version` }}",
+                "DATADOG_API_KEY={{ user `datadog_api_key` }}"
             ],
             "execute_command": "{{.Vars}} bash '{{.Path}}'",
             "script": "provision_awslinux.sh"
