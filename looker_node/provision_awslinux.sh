@@ -9,6 +9,9 @@ echo "------------------- updating time zone complete -------------------"
 sudo yum update -y
 sudo amazon-linux-extras install -y epel
 
+sudo mv /home/ec2-user/datadog.repo /etc/yum.repos.d/datadog.repo
+sudo yum makecache
+
 sudo yum install -y \
 openssl-devel \
 libmcrypt-devel \
@@ -30,7 +33,8 @@ chromium-browser \
 libstdc++ \
 netcat \
 mysql \
-amazon-efs-utils
+amazon-efs-utils \
+datadog-agent
 echo "------------------- looker yum dependencies complete -------------------"
 
 curl https://intoli.com/install-google-chrome.sh | bash
@@ -80,6 +84,11 @@ sudo systemctl enable al-agent
 rm /home/ec2-user/al-agent_LATEST_amd64.rpm
 echo "------------------- enable autostart of threat manager and remove deb-------------------"
 
+
+sudo sh -c "sed 's/api_key:.*/api_key: ${DATADOG_API_KEY}/' /etc/datadog-agent/datadog.yaml.example > /etc/datadog-agent/datadog.yaml"
+sudo cat /etc/datadog-agent/datadog.yaml
+echo "------------------- setup datadog items-------------------"
+
 sudo adduser looker
 echo "------------------- add looker user and group complete -------------------"
 
@@ -102,15 +111,32 @@ echo "------------------- updated launchd complete -------------------"
 echo '%looker ALL=(ALL) NOPASSWD:ALL' | sudo tee -a /etc/sudoers
 echo "------------------- adding looker to sudoers complete -------------------"
 
-sudo su - looker <<HERE
-mkdir /home/looker/looker
-mkdir /home/looker/looker/deploy_keys
-curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'${LOOKER_LICENSE_KEY}'", "email": "'${LOOKER_LICENSE_EMAIL}'", "latest": "specific", "specific": "looker-latest.jar"}' https://apidownload.looker.com/download | jq '.url' | xargs curl -o /home/looker/looker/looker.jar
-curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'${LOOKER_LICENSE_KEY}'", "email": "'${LOOKER_LICENSE_EMAIL}'", "latest": "specific", "specific": "looker-latest.jar"}' https://apidownload.looker.com/download | jq '.depUrl' | xargs curl -o /home/looker/looker/looker-dependencies.jar
-curl -o /home/looker/looker/looker https://raw.githubusercontent.com/looker/customer-scripts/master/startup_scripts/looker
-chmod 0750 /home/looker/looker/looker
-HERE
+sudo mkdir /home/looker/looker
+sudo mkdir /home/looker/looker/deploy_keys
+echo "------------------- setup looker directories -------------------"
 
+
+if [ "$LOOKER_VERSION" == "latest" ]; then
+    echo "------------------- getting lastest looker jars -------------------"
+    curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'${LOOKER_LICENSE_KEY}'", "email": "'${LOOKER_LICENSE_EMAIL}'", "latest": "latest"}' https://apidownload.looker.com/download | jq '.url' | xargs curl -o /home/ec2-user/looker.jar
+    curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'${LOOKER_LICENSE_KEY}'", "email": "'${LOOKER_LICENSE_EMAIL}'", "latest": "latest"}' https://apidownload.looker.com/download | jq '.depUrl' | xargs curl -o /home/ec2-user/looker-dependencies.jar
+else
+    echo "------------------- getting version $LOOKER_VERSION of the looker jars -------------------"
+    curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'${LOOKER_LICENSE_KEY}'", "email": "'${LOOKER_LICENSE_EMAIL}'", "latest": "specific", "specific": "looker-'${LOOKER_VERSION}'-latest.jar"}' https://apidownload.looker.com/download | jq '.url' | xargs curl -o /home/ec2-user/looker.jar
+    curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'${LOOKER_LICENSE_KEY}'", "email": "'${LOOKER_LICENSE_EMAIL}'", "latest": "specific", "specific": "looker-'${LOOKER_VERSION}'-latest.jar"}' https://apidownload.looker.com/download | jq '.depUrl' | xargs curl -o /home/ec2-user/looker-dependencies.jar
+fi
+sudo ls -al /home/ec2-user/
 echo "------------------- download looker jars complete -------------------"
+
+curl -o /home/ec2-user/looker https://raw.githubusercontent.com/looker/customer-scripts/master/startup_scripts/looker
+echo "------------------- download looker startup complete -------------------"
+
+sudo mv /home/ec2-user/looker /home/looker/looker/looker
+sudo mv /home/ec2-user/looker.jar /home/looker/looker/looker.jar
+sudo mv /home/ec2-user/looker-dependencies.jar /home/looker/looker/looker-dependencies.jar
+sudo chown -R looker:looker /home/looker/looker
+sudo chmod 0750 /home/looker/looker/looker
+sudo ls -al /home/looker/looker/
+echo "------------------- move files and set permissions complete -------------------"
 
 java -version
