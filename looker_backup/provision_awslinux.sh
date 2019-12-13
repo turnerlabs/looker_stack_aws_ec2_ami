@@ -9,8 +9,7 @@ echo "------------------- updating time zone complete -------------------"
 sudo yum update -y
 sudo amazon-linux-extras install -y epel
 
-sudo yum install -y \
-amazon-efs-utils \
+sudo yum install -y amazon-efs-utils 
 echo "------------------- backup yum dependencies complete -------------------"
 
 wget https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O /home/ec2-user/amazon-cloudwatch-agent.rpm
