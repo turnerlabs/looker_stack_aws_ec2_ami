@@ -1,13 +1,15 @@
 # What is this?
 
-## THIS IS A WIP
+**Currently supported version of Looker: <this is configurable>**
+**AMI Base: Amazon Linux 2**
 
-**Currently supported version of Looker: TBD**
+This contains the packer code to create the 3 AMI's for Looker:
+  * A Bastion instance.
+  * The Looker Node instance.
+  * A Backup instance.(to allow backing up of EFS)
 
-This contains the packer code to create the AMI's for the Bastion and Node for Looker.
+The looker_bastion path contains the code to generate the bastion server.
 
-The looker_bastion path contains the code to generate a bastion server.
+The looker_node path contains the code to generate the looker node instance.
 
-The looker_node path contains the code to generate the looker node.
-
-Each directory contains code for the amazon linux ami.
+The looker_backup path contains the code to generate the backup instance.
