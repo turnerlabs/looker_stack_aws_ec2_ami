@@ -5,9 +5,9 @@
 
 This contains the [packer](https://packer.io/) code to create 3 AMI's for Looker:
 
-* A Bastion instance.
-* The Looker Node instance.
-* A Backup instance
+* The Bastion instance - provides access to looker nodes when needed.
+* The Looker Node instance - provides Looker website / product.
+* The EFS Backup instance - provides nightly backups of EFS.
 
 The [looker_bastion](https://github.com/turnerlabs/looker_stack_aws_ec2_ami/blob/master/looker_bastion) path contains the code to generate the bastion server.
 
