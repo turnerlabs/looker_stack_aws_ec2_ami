@@ -19,7 +19,7 @@ What does this AMI contain?
 
 ## Builder
 
-The builder phase uses a t2 medium of the Ubuntu 16.04 or the Amazon Linux AMI in the east region as the instance type to run the provisioner on.  The instance size can be changed to something larger if you need to create the AMI faster.  This is just for building the AMI and has no bearing on the long running instance.  That is determined in the terraform script.
+The builder phase uses a t2 medium of the Amazon Linux AMI in the east region as the instance type to run the provisioner on.  The instance size can be changed to something larger if you need to create the AMI faster.  This is just for building the AMI and has no bearing on the long running instance.  That is determined in the terraform script [here](https://github.com/turnerlabs/looker_stack_aws_ec2_tf).
 
 ## Provisioner
 
