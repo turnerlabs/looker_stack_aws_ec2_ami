@@ -4,9 +4,9 @@ There are several steps required to migrate a new version of Looker.
 
 ## Assumptions
 
-* You have run samlkeygen(or used an alternative method) to generate secret / access keys for the account.
+* You have run [samlkeygen]https://github.com/turnerlabs/samlkeygen (or an alternative method) to generate secret / access keys for the account.
 * You have git cloned the looker ami repo(git clone git@github.com:turnerlabs/looker_stack_aws_ec2_ami.git).
-* You have followed the instructions here(https://github.com/turnerlabs/looker_stack_aws_ec2_ami/blob/master/looker_node/README.md) to succesfully create a new Looker Node AMI.
+* You have followed the instructions [here](https://github.com/turnerlabs/looker_stack_aws_ec2_ami/blob/master/looker_node/README.md) to succesfully create a new Looker Node AMI.
 * You've already installed python and have pip installed the awscli.
 
 ## Updating
