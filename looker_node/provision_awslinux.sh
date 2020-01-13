@@ -113,18 +113,18 @@ echo "------------------- adding looker to sudoers complete -------------------"
 
 sudo mkdir /home/looker/looker
 sudo mkdir /home/looker/looker/deploy_keys
-sudo mkdir /home/looker/.lookerjmx
+#sudo mkdir /home/looker/.lookerjmx
 echo "------------------- setup looker directories -------------------"
 
-echo "monitorRole   readonly" | sudo tee -a /home/looker/.lookerjmx/jmxremote.access
-echo "controlRole   readwrite \\" | sudo tee -a /home/looker/.lookerjmx/jmxremote.access
-echo "              create javax.management.monitor.*,javax.management.timer.* \\" | sudo tee -a /home/looker/.lookerjmx/jmxremote.access
-echo "              unregister" | sudo tee -a /home/looker/.lookerjmx/jmxremote.access
+#echo "monitorRole   readonly" | sudo tee -a /home/looker/.lookerjmx/jmxremote.access
+#echo "controlRole   readwrite \\" | sudo tee -a /home/looker/.lookerjmx/jmxremote.access
+#echo "              create javax.management.monitor.*,javax.management.timer.* \\" | sudo tee -a /home/looker/.lookerjmx/jmxremote.access
+#echo "              unregister" | sudo tee -a /home/looker/.lookerjmx/jmxremote.access
 
-echo "monitorRole   some_password_here" | sudo tee -a /home/looker/.lookerjmx/jmxremote.password
-echo "controlRole   some_password_here" | sudo tee -a /home/looker/.lookerjmx/jmxremote.password
+#echo "monitorRole   some_password_here" | sudo tee -a /home/looker/.lookerjmx/jmxremote.password
+#echo "controlRole   some_password_here" | sudo tee -a /home/looker/.lookerjmx/jmxremote.password
 
-echo "------------------- prtially setup jmx related items -------------------"
+echo "------------------- partially setup jmx related items -------------------"
 
 if [ "$LOOKER_VERSION" == "latest" ]; then
     echo "------------------- getting lastest looker jars -------------------"
@@ -138,15 +138,15 @@ fi
 echo "------------------- download looker jars complete -------------------"
 
 curl -o /home/ec2-user/looker https://raw.githubusercontent.com/looker/customer-scripts/master/startup_scripts/looker
-sed -i -e "s/JAVAARGS=""/JAVAARGS="JMXARGS"/g" /home/ec2-user/looker
+#sed -i -e "s/JAVAARGS=""/JAVAARGS="JMXARGS"/g" /home/ec2-user/looker
 echo "------------------- download looker startup and modify to include JMX complete -------------------"
 
 sudo mv /home/ec2-user/looker /home/looker/looker/looker
 sudo mv /home/ec2-user/looker.jar /home/looker/looker/looker.jar
 sudo mv /home/ec2-user/looker-dependencies.jar /home/looker/looker/looker-dependencies.jar
 sudo chmod 0750 /home/looker/looker/looker
-sudo chmod 0700 /home/looker/.lookerjmx
-sudo chmod 0400 /home/looker/.lookerjmx/jmxremote.*
-sudo chown -R looker:looker /home/looker/looker
-sudo chown -R looker:looker /home/looker/.lookerjmx
+# sudo chmod 0700 /home/looker/.lookerjmx
+# sudo chmod 0400 /home/looker/.lookerjmx/jmxremote.*
+# sudo chown -R looker:looker /home/looker/looker
+# sudo chown -R looker:looker /home/looker/.lookerjmx
 echo "------------------- move files and set permissions complete -------------------"
