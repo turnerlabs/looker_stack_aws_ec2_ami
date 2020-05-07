@@ -7,12 +7,9 @@ This contains the [packer](https://packer.io/) code to create 3 AMI's for Looker
 
 * A Bastion instance.
 * The Looker Node instance.
-* A Backup instance
 
 The [looker_bastion](https://github.com/turnerlabs/looker_stack_aws_ec2_ami/blob/master/looker_bastion/README.md) path contains the code to generate the bastion server.
 
 The [looker_node](https://github.com/turnerlabs/looker_stack_aws_ec2_ami/blob/master/looker_node/README.md) path contains the code to generate the looker node instance.
-
-The [looker_backup](https://github.com/turnerlabs/looker_stack_aws_ec2_ami/blob/master/looker_backup/README.md) path contains the code to generate the looker backup instance.
 
 If you need to migrate a new version of Looker, check [here](https://github.com/turnerlabs/looker_stack_aws_ec2_tf) for detailed steps.
